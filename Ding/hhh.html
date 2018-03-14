@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lunch</title>
+    <!--<script type="text/javascript" src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.3.1/index.js" ></script>-->
+    <script type="text/javascript" src="http://g.alicdn.com/dingding/open-develop/1.6.9/dingtalk.js" ></script>
+    <script type="text/javascript" src="https://g.alicdn.com/dingding/dingtalk-pc-api/2.7.0/index.js"></script>
+</head>
+<body>
+<div id="box"></div>
+<div id="box1"></div>
+<div id="box2"></div>
+<div id="box3"></div>
+<div id="box4"></div>
+<div id="data"></div>
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+
+/*     dd.ready(function(){
+         dd.device.notification.confirm({
+             message: "你爱我吗",
+             title: "提示",
+             buttonLabels: ['爱', '不爱'],
+             onSuccess : function(result) {
+                 //onSuccess将在点击button之后回调
+                 {
+                     buttonIndex: 0 //被点击按钮的索引值，Number类型，从0开始
+                 }
+             },
+             onFail : function(err) {}
+         });
+
+
+     });*/
+
+
+    window.onload = function () {
+        var config_data;
+        function a (){
+            // var url = 'http://localhost/Ding/public/index/index/index';
+            var url = 'http://devding.sport147.cn/?m=Home&c=Index&a=sign';
+
+
+
+            var myHeaders = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+            };
+            fetch(url,myHeaders).then(function(ret){
+                return ret.json();
+            }).then(function (data) {
+                console.log(data);
+                //document.getElementById('box').innerHTML = data.agentid;
+
+                b(data);
+            })
+        }
+        a();
+
+        function b(data) {
+            console.log('ghgfh');
+            console.log(data);
+            document.getElementById('box').innerHTML = data.agentid;
+            document.getElementById('box1').innerHTML = data.corpid;
+            document.getElementById('box2').innerHTML = data.nonceStr;
+            document.getElementById('box3').innerHTML = data.signature;
+            document.getElementById('box4').innerHTML = data.timeStamp;
+
+            DingTalkPC.config({
+/*                agentId: data.agentid,
+                corpId: data.corpid,
+                timeStamp: data.timeStamp,
+                nonceStr: data.nonceStr,
+                signature: data.signature,*/
+
+                agent : 161276226,
+                corpId : ding3d07a31c1957d50d35c2f4657eb6378f,
+                timeStamp : 1521023846,
+                nonceStr : EAezQ4MXp8,
+                signature : a2e50f25e1add69cabd8d4fdc8b134057428558b,
+
+                jsApiList: [
+                    /*'runtime.info',
+                    'device.notification.prompt',
+                    'biz.chat.pickConversation',
+                    'device.notification.confirm',
+                    'device.notification.alert',
+                    'device.notification.prompt',
+                    'biz.chat.open',
+                    'biz.util.open',
+                    'biz.user.get',
+                    'biz.contact.choose',
+                    'biz.telephone.call',
+                    'biz.ding.post'*/]
+            })
+
+            DingTalkPC.ready(function() {
+                console.log(data);
+                DingTalkPC.runtime.permission.requestAuthCode({
+                    corpId: data.corpid, // 企业id
+                    onSuccess: function (info) {
+                        code = info.code // 通过该免登授权码可以获取用户身份
+                        document.getElementById('data').innerHTML = data.corpid;
+                    }});
+
+/*                dd.runtime.permission.requestOperateAuthCode({
+                    corpId: data.corpid,
+                    agentId:data.agentid,
+                    onSuccess: function(result) {
+                        console.log(result);
+                    },
+                    onFail : function(err) {}
+
+                })*/
+            });
+
+
+
+        }
+
+
+    }
+
+</script>
