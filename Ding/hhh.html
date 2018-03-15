@@ -39,7 +39,7 @@
      });*/
 
 
-    window.onload = function () {
+    window.onload = function () { //http://devding.sport147.cn/Ding/hhh.html
         var config_data;
         function a (){
             // var url = 'http://localhost/Ding/public/index/index/index';
@@ -52,12 +52,12 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                method: 'POST',
+                method: 'GET',
             };
             fetch(url,myHeaders).then(function(ret){
                 return ret.json();
             }).then(function (data) {
-                console.log(data);
+                // console.log(data);
                 //document.getElementById('box').innerHTML = data.agentid;
 
                 b(data);
@@ -66,61 +66,136 @@
         a();
 
         function b(data) {
-            console.log('ghgfh');
-            console.log(data);
-            document.getElementById('box').innerHTML = data.agentid;
+            // console.log('ghgfh');
+            // console.log(data);
+/*            document.getElementById('box').innerHTML = data.agentid;
             document.getElementById('box1').innerHTML = data.corpid;
-            document.getElementById('box2').innerHTML = data.nonceStr;
+            document.getElementById('box2').innerHTML = data.noncestr;
             document.getElementById('box3').innerHTML = data.signature;
-            document.getElementById('box4').innerHTML = data.timeStamp;
+            document.getElementById('box4').innerHTML = data.timeStamp;*/
 
-            DingTalkPC.config({
-/*                agentId: data.agentid,
+
+            var _config = {
+                agentId: data.agentid,
                 corpId: data.corpid,
                 timeStamp: data.timeStamp,
-                nonceStr: data.nonceStr,
-                signature: data.signature,*/
+                nonceStr: data.noncestr,
+                signature: data.signature,
+            }
 
-                agent : 161276226,
-                corpId : ding3d07a31c1957d50d35c2f4657eb6378f,
-                timeStamp : 1521023846,
-                nonceStr : EAezQ4MXp8,
-                signature : a2e50f25e1add69cabd8d4fdc8b134057428558b,
 
+            // console.log(_config);
+
+            DingTalkPC.config({
+                agentId: _config.agentId,
+                corpId: _config.corpId,
+                timeStamp: _config.timeStamp,
+                nonceStr: _config.nonceStr,
+                signature: _config.signature,
                 jsApiList: [
-                    /*'runtime.info',
-                    'device.notification.prompt',
-                    'biz.chat.pickConversation',
-                    'device.notification.confirm',
-                    'device.notification.alert',
-                    'device.notification.prompt',
-                    'biz.chat.open',
-                    'biz.util.open',
-                    'biz.user.get',
-                    'biz.contact.choose',
-                    'biz.telephone.call',
-                    'biz.ding.post'*/]
-            })
+                    'runtime.permission.requestAuthCode', // 获取code
+                    'device.notification.alert', //  alert 弹窗
+                    'device.notification.confirm', // confirm 弹窗
+                    'biz.contact.choose', // 选人
+                    'device.notification.prompt', // prompt弹窗
+                    'biz.ding.post', // 发钉钉消息
+                    'biz.user.get', //获取用户信息
+
+                ]
+            });
 
             DingTalkPC.ready(function() {
-                console.log(data);
-                DingTalkPC.runtime.permission.requestAuthCode({
-                    corpId: data.corpid, // 企业id
-                    onSuccess: function (info) {
-                        code = info.code // 通过该免登授权码可以获取用户身份
-                        document.getElementById('data').innerHTML = data.corpid;
-                    }});
 
-/*                dd.runtime.permission.requestOperateAuthCode({
-                    corpId: data.corpid,
-                    agentId:data.agentid,
+                DingTalkPC.runtime.permission.requestAuthCode({
+                    corpId: _config.corpId,
+                    onSuccess: function(result) {
+
+                            console.log(result);
+                            document.getElementById('box').innerHTML = result.code;
+
+/*                            var url = 'http://devding.sport147.cn/?m=Home&c=Index&a=get_code';
+
+                            var myHeaders = {
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    code: result.code,
+                                })
+                            }*/
+
+
+
+                        fetch(url,myHeaders).then(function(ret){
+                            return ret.json();
+                        }).then(function (data) {
+                            // console.log(data);
+                            //document.getElementById('box').innerHTML = data.agentid;
+
+
+                        })
+
+                    },
+                    onFail : function(err) {
+                        console.log('获取code失败');
+                    }
+
+                });
+
+                DingTalkPC.biz.user.get({
+                    corpId:_config.corpId, // 可选参数，如果不传则使用用户当前企业的corpId。
+                    onSuccess: function (info) {
+                        console.log(info);
+                        document.getElementById('box1').innerHTML = info.nickName;
+                        document.getElementById('box2').innerHTML = info.emplId;
+
+/*                        Ext.Ajax.request(
+                            {
+                                nickName : info.nickName,
+                                openId : info.emplId,
+                            },
+                            success:function (response) {
+
+                        }
+                        )*/
+
+                        //logger.e('userGet success: ' + JSON.stringify(info));
+                    },
+                    onFail: function (err) {
+                        //logger.e('userGet fail: ' + JSON.stringify(err));
+                    }
+                });
+
+            });
+
+            DingTalkPC.error(function(err) {
+                alert('DingTalkPC error: ' + JSON.stringify(err));
+            });
+
+
+/*            DingTalkPC.ready(function() {
+
+                DingTalkPC.runtime.permission.requestOperateAuthCode({
+                    corpId: _config.corpid,
+                    agentId:_config.agentid,
                     onSuccess: function(result) {
                         console.log(result);
                     },
                     onFail : function(err) {}
 
-                })*/
+                })
+
             });
+
+            DingTalkPC.error(function(err) {
+                alert('DingTalkPC error: ' + JSON.stringify(err));
+            });*/
+
+
+
+
 
 
 
